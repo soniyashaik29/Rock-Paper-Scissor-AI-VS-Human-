@@ -2,6 +2,8 @@
 
 A modern, responsive, and interactive website built using **HTML, CSS, and JavaScript**. The project focuses on a clean user interface, responsive design, and smooth interactions across different screen sizes.
 
+https://soniyashaik29.github.io/Rock-Paper-Scissor-AI-VS-Human-/
+
 ## 🚀 Features
 
 * 📱 Fully responsive design
