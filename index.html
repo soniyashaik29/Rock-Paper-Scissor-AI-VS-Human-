@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A modern Rock Paper Scissors game with Best-of-N mode, match history, sound effects, and light/dark theme." />
+  <meta name="theme-color" content="#10141f" />
+  <title>Rock Paper Scissors · Modern</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Preconnect for potential fonts, none required (system fonts used) -->
+</head>
+<body>
+  <!-- ============ HEADER / CONTROLS BAR ============ -->
+  <header class="app-header">
+    <h1 class="app-title">
+      <span class="app-title__icon" aria-hidden="true">🎮</span>
+      Rock · Paper · Scissors
+    </h1>
+
+    <div class="header-actions">
+      <!-- Theme toggle -->
+      <button
+        id="themeToggle"
+        class="icon-btn"
+        type="button"
+        aria-label="Toggle light and dark theme"
+        aria-pressed="false"
+        title="Toggle theme"
+      >
+        <span class="icon-btn__icon" id="themeIcon" aria-hidden="true">🌙</span>
+      </button>
+
+      <!-- Sound toggle -->
+      <button
+        id="soundToggle"
+        class="icon-btn"
+        type="button"
+        aria-label="Toggle sound effects"
+        aria-pressed="true"
+        title="Toggle sound"
+      >
+        <span class="icon-btn__icon" id="soundIcon" aria-hidden="true">🔊</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ MAIN GAME AREA ============ -->
+  <main class="game" role="main">
+
+    <!-- ---- SCORE PANEL (persistent top) ---- -->
+    <section class="scoreboard" aria-label="Scoreboard">
+      <div class="scoreboard__item">
+        <span class="scoreboard__label">Wins</span>
+        <span class="scoreboard__value scoreboard__value--wins" id="winsScore" aria-live="polite">0</span>
+      </div>
+      <div class="scoreboard__item">
+        <span class="scoreboard__label">Losses</span>
+        <span class="scoreboard__value scoreboard__value--losses" id="lossesScore" aria-live="polite">0</span>
+      </div>
+      <div class="scoreboard__item">
+        <span class="scoreboard__label">Ties</span>
+        <span class="scoreboard__value scoreboard__value--ties" id="tiesScore" aria-live="polite">0</span>
+      </div>
+      <div class="scoreboard__item scoreboard__item--target">
+        <label class="scoreboard__label" for="bestOfSelect">Best of</label>
+        <select id="bestOfSelect" class="best-of-select" aria-label="Best of rounds mode">
+          <option value="1">1 (Single round)</option>
+          <option value="3">3</option>
+          <option value="5" selected>5</option>
+          <option value="7">7</option>
+        </select>
+      </div>
+      <button
+        class="reset-btn"
+        id="resetBtn"
+        type="button"
+        aria-label="Reset score and match"
+      >
+        ↻ Reset
+      </button>
+    </section>
+
+    <!-- ---- MATCH PROGRESS ---- -->
+    <section class="match-progress" aria-label="Match progress">
+      <div class="match-progress__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="matchProgress">
+        <span class="match-progress__fill" id="matchProgressFill" style="width: 0%"></span>
+      </div>
+      <p class="match-progress__text" id="matchProgressText" aria-live="polite">
+        First to 3 wins the match
+      </p>
+    </section>
+
+    <!-- ---- ARENA (both choices) ---- -->
+    <section class="arena" aria-label="Game arena">
+      <div class="arena__side">
+        <h2 class="arena__label">You</h2>
+        <div class="arena__display" id="playerDisplay" aria-live="polite" aria-label="Your choice">❔</div>
+      </div>
+
+      <div class="arena__vs" aria-hidden="true">VS</div>
+
+      <div class="arena__side">
+        <h2 class="arena__label">Computer</h2>
+        <div class="arena__display" id="computerDisplay" aria-live="polite" aria-label="Computer choice">❔</div>
+      </div>
+    </section>
+
+    <!-- ---- RESULT MESSAGE ---- -->
+    <p class="result" id="resultMessage" role="status" aria-live="polite">
+      Make your move!
+    </p>
+
+    <!-- ---- PLAYER CONTROLS ---- -->
+    <section class="controls" aria-label="Choose your move">
+      <button
+        class="choice-btn"
+        id="rockBtn"
+        data-move="rock"
+        type="button"
+        aria-label="Rock"
+      >🪨</button>
+      <button
+        class="choice-btn"
+        id="paperBtn"
+        data-move="paper"
+        type="button"
+        aria-label="Paper"
+      >📄</button>
+      <button
+        class="choice-btn"
+        id="scissorsBtn"
+        data-move="scissors"
+        type="button"
+        aria-label="Scissors"
+      >✂️</button>
+    </section>
+
+    <!-- ---- MATCH HISTORY LOG ---- -->
+    <section class="history" aria-label="Round history">
+      <div class="history__header">
+        <h3 class="history__title">Round History</h3>
+        <button
+          class="history__clear"
+          id="clearHistoryBtn"
+          type="button"
+          aria-label="Clear round history"
+        >Clear</button>
+      </div>
+      <ul class="history__list" id="historyList" aria-live="polite">
+        <li class="history__empty" id="historyEmpty">No rounds played yet.</li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- ============ MATCH OVER MODAL ============ -->
+  <div
+    class="modal"
+    id="matchModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="matchModalTitle"
+    hidden
+  >
+    <div class="modal__backdrop" id="matchModalBackdrop"></div>
+    <div class="modal__card">
+      <h2 class="modal__title" id="matchModalTitle">Match Over</h2>
+      <p class="modal__message" id="matchModalMessage">You won the match!</p>
+      <p class="modal__sub" id="matchModalSub">Final score: 3 – 1</p>
+      <button class="modal__btn" id="matchModalBtn" type="button">Play Again</button>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
